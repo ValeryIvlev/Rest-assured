@@ -22,7 +22,7 @@ public class TestApi {
                 .when()
                 .get("/unknown/2")
                 .then()
-                .spec(responseOk)
+                .spec(response200)
                 .log().all()
                 .extract().as(LombokUserData.class);
         assertEquals(2, data.getUser().getId());
@@ -45,14 +45,68 @@ public class TestApi {
                 .body(infoBody)
                 .put("/users/2")
                 .then()
-                .spec(responseOk)
+                .spec(response200)
                 .log().all()
                 .extract().as(LombokUserData.class);
-        assertEquals("morpheus", data.getUser().getName());
-        assertEquals("zion resident", data.getUser().getJob());
-        // .body("name", is("morpheus"))
-
-        //  .body("job", is("zion resident"));
+        assertEquals("morpheus", data.getName());
+        assertEquals("zion resident", data.getJob());
 
     }
+
+    @Test
+    @DisplayName("Проверка создания пользователя")
+    public void createUser() {
+
+        String newUser = "{\n" +
+                "    \"name\": \"morpheus\",\n" +
+                "    \"job\": \"leader\"\n" +
+                "}";
+
+        LombokUserData data = given()
+                .spec(request)
+                .when()
+                .body(newUser)
+                .post("/users")
+                .then()
+                .spec(response201)
+                .log().all()
+                .extract().as(LombokUserData.class);
+        assertEquals("morpheus", data.getName());
+        assertEquals("leader", data.getJob());
+    }
+    @Test
+    @DisplayName("Проверка запроса данных у несуществуюшего пользователя")
+    public void checkUnknownUser() {
+
+         given()
+                .spec(request)
+                .when()
+                .get("/users/23")
+                .then()
+                .spec(response404)
+                .log().all();
+    }
+    @Test
+    @DisplayName("Проверка регистрации нового пользователя")
+    public void registerNewUser() {
+
+        String newUser = "{\n" +
+                "    \"email\": \"eve.holt@reqres.in\",\n" +
+                "    \"password\": \"pistol\"\n" +
+                "}";
+
+        given()
+                .spec(request)
+                .when()
+                .contentType(ContentType.JSON)
+                .body(newUser)
+                .post("/register")
+                .then()
+                .spec(response200)
+                .log().all()
+                .body("id", is(notNullValue()))
+                .body("token", is(notNullValue()));
+
+    }
+
 }

@@ -14,12 +14,15 @@ public class Specs {
             .log().uri()
             .contentType(ContentType.JSON);
 
-    public static ResponseSpecification responseOk = new ResponseSpecBuilder()
-            //.expectStatusCode(200)
+    public static ResponseSpecification response200 = new ResponseSpecBuilder()
+            .expectStatusCode(200)
             .build();
 
-    public static ResponseSpecification responseFail = new ResponseSpecBuilder()
-            .expectStatusCode(200)
+    public static ResponseSpecification response201 = new ResponseSpecBuilder()
+            .expectStatusCode(201)
+            .build();
+    public static ResponseSpecification response404 = new ResponseSpecBuilder()
+            .expectStatusCode(404)
             .build();
 
 }

@@ -9,5 +9,9 @@ import lombok.Data;
 public class LombokUserData {
     @JsonProperty("data")
     private User user;
+    @JsonProperty("name")
+    private String name;
+    @JsonProperty("job")
+    private String job;
 
 }
