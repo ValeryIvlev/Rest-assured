@@ -6,8 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.zayac.api.lombok.LombokUserData;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.zayac.api.Specs.*;
 
@@ -28,6 +27,19 @@ public class TestApi {
         assertEquals(2, data.getUser().getId());
         assertEquals("fuchsia rose", data.getUser().getName());
 
+    }
+
+    @Test
+    @DisplayName("Проверка имени пользователя с ID 1")
+    public void checkNameUserID1() {
+
+        given()
+                .spec(request)
+                .when()
+                .get("/unknown")
+                .then().log().body()
+                .spec(response200)
+                .body("data.findAll{it.id == 1}.name", hasItem("cerulean"));
     }
 
     @Test
@@ -108,5 +120,5 @@ public class TestApi {
                 .body("token", is(notNullValue()));
 
     }
-
 }
+
