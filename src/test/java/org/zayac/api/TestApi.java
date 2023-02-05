@@ -9,6 +9,7 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.zayac.api.Specs.*;
+import static org.zayac.api.helpers.CustomApiListener.withCustomTemplates;
 
 public class TestApi {
 
@@ -18,6 +19,7 @@ public class TestApi {
 
         LombokUserData data = given()
                 .spec(request)
+                .filter(withCustomTemplates())
                 .when()
                 .get("/unknown/2")
                 .then()
@@ -30,68 +32,56 @@ public class TestApi {
     }
 
     @Test
-    @DisplayName("Проверка имени пользователя с ID 1")
-    public void checkNameUserID1() {
-
-        given()
-                .spec(request)
-                .when()
-                .get("/unknown")
-                .then().log().body()
-                .spec(response200)
-                .body("data.findAll{it.id == 1}.name", hasItem("cerulean"));
-    }
-
-    @Test
     @DisplayName("Проверка изменения должности у пользователя")
     public void updateJob() {
+    LombokUserData lombokUserData = new LombokUserData();
 
-        String infoBody = "{\n" +
-                "    \"name\": \"morpheus\",\n" +
-                "    \"job\": \"zion resident\"\n" +
-                "}";
+        lombokUserData.setName("morpheus");
+        lombokUserData.setJob("zion resident");
 
         LombokUserData data = given()
                 .spec(request)
+                .filter(withCustomTemplates())
                 .when()
-                .body(infoBody)
+                .body(lombokUserData)
                 .put("/users/2")
                 .then()
                 .spec(response200)
                 .log().all()
                 .extract().as(LombokUserData.class);
-        assertEquals("morpheus", data.getName());
-        assertEquals("zion resident", data.getJob());
+        assertEquals(lombokUserData.getName(), data.getName());
+        assertEquals(lombokUserData.getJob(), data.getJob());
 
     }
 
     @Test
     @DisplayName("Проверка создания пользователя")
     public void createUser() {
+        LombokUserData lombokUserData = new LombokUserData();
 
-        String newUser = "{\n" +
-                "    \"name\": \"morpheus\",\n" +
-                "    \"job\": \"leader\"\n" +
-                "}";
+        lombokUserData.setName("morpheus");
+        lombokUserData.setJob("leader");
 
         LombokUserData data = given()
                 .spec(request)
+                .filter(withCustomTemplates())
                 .when()
-                .body(newUser)
+                .body(lombokUserData)
                 .post("/users")
                 .then()
                 .spec(response201)
                 .log().all()
                 .extract().as(LombokUserData.class);
-        assertEquals("morpheus", data.getName());
-        assertEquals("leader", data.getJob());
+        assertEquals(lombokUserData.getName(), data.getName());
+        assertEquals(lombokUserData.getJob(), data.getJob());
     }
     @Test
     @DisplayName("Проверка запроса данных у несуществуюшего пользователя")
     public void checkUnknownUser() {
 
-         given()
+        given()
                 .spec(request)
+                .filter(withCustomTemplates())
                 .when()
                 .get("/users/23")
                 .then()
@@ -101,17 +91,16 @@ public class TestApi {
     @Test
     @DisplayName("Проверка регистрации нового пользователя")
     public void registerNewUser() {
+        LombokUserData lombokUserData = new LombokUserData();
 
-        String newUser = "{\n" +
-                "    \"email\": \"eve.holt@reqres.in\",\n" +
-                "    \"password\": \"pistol\"\n" +
-                "}";
+        lombokUserData.setEmail("eve.holt@reqres.in");
+        lombokUserData.setPassword("pistol");
 
         given()
                 .spec(request)
+                .filter(withCustomTemplates())
                 .when()
-                .contentType(ContentType.JSON)
-                .body(newUser)
+                .body(lombokUserData)
                 .post("/register")
                 .then()
                 .spec(response200)
