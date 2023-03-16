@@ -12,5 +12,4 @@ public class TestBase {
         baseURI = "https://demowebshop.tricentis.com";
         Configuration.baseUrl = "https://demowebshop.tricentis.com";
     }
-
 }
