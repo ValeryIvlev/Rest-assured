@@ -21,8 +21,8 @@ public class Specs {
     public static ResponseSpecification response201 = new ResponseSpecBuilder()
             .expectStatusCode(201)
             .build();
+    
     public static ResponseSpecification response404 = new ResponseSpecBuilder()
             .expectStatusCode(404)
             .build();
-
 }
