@@ -26,7 +26,6 @@ public class TestApi {
                 .extract().as(LombokUserData.class);
         assertEquals(2, data.getUser().getId());
         assertEquals("fuchsia rose", data.getUser().getName());
-
     }
 
     @Test
@@ -86,6 +85,7 @@ public class TestApi {
         assertEquals("morpheus", data.getName());
         assertEquals("leader", data.getJob());
     }
+    
     @Test
     @DisplayName("Проверка запроса данных у несуществуюшего пользователя")
     public void checkUnknownUser() {
@@ -121,4 +121,3 @@ public class TestApi {
 
     }
 }
-
